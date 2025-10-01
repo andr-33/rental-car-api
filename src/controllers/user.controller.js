@@ -12,4 +12,15 @@ userController.createUser = async (req, res) => {
     }
 };
 
+userController.login = async (req, res) => {
+    try {
+        const { email, password } = req.body;
+        const sessionToken =await userService.loginInDB(email, password);
+        res.status(200).json({ message: "Login successful", sessionToken });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+};
+
 module.exports = userController;

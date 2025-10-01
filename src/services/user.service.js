@@ -20,4 +20,14 @@ userService.createUserInDB = async (user) => {
   if (createdError) throw createdError;
 };
 
+userService.loginInDB = async (email, password) => {
+  const { data: authUser, error: authError } = await supabase.auth.signInWithPassword({
+    email,
+    password,
+  });
+  if (authError) throw authError;
+  
+  return authUser.session.access_token;
+};
+
 module.exports = userService;
