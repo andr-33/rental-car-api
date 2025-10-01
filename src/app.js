@@ -11,10 +11,11 @@ const corsOptions = {
   allowedHeaders: ['Content-Type', 'Authorization'],
 };
 
-app.use('/api', routes);
 app.use(cors(corsOptions));
 app.use(morgan('dev'));
 app.use(express.json());
+
+app.use('/api', routes);
 
 app.use((err, req, res, next) => {
   console.error(err.stack);
