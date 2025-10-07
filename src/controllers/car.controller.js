@@ -4,10 +4,15 @@ const carController = {};
 carController.getAllCars = async (req, res) => {
     try {
         const cars = await carService.getAllCarsFromDB();
-        res.json(cars);
+        res.status(200).json(cars);
     } catch (error) {
         console.error(error);
-        res.status(500).json({ error: "Internal Server Error" });
+        res.status(error.status || 500).json({ 
+            error: {
+                message: error.message || "Internal Server Error",
+                code: "getAllCarsError"
+            }
+        });
     }
 };
 
