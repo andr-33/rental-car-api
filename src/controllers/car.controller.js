@@ -10,7 +10,7 @@ carController.getAllCars = async (req, res) => {
         res.status(error.status || 500).json({ 
             error: {
                 message: error.message || "Internal Server Error",
-                code: "getAllCarsError"
+                code: "getCarsError"
             }
         });
     }

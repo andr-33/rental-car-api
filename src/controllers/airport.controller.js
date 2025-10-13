@@ -10,7 +10,7 @@ aiportController.getAllAirports = async (req, res) => {
         res.status(error.status || 500).json({ 
             error: {
                 message: error.message || "Internal Server Error",
-                code: "getAllAirportsError"
+                code: "getAirportsError"
             }
         });
     }
