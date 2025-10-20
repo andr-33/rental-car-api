@@ -2,10 +2,10 @@ const mailerService = require("../services/mailer.service");
 const mailerController = {};
 
 mailerController.rentalRequest = async (req, res) => {
-  const { recipientEmail, carModel } = req.body;
+  const { recipientEmail, rentalDetails } = req.body;
 
   try {
-    await mailerService.sendRentalRequestEmail(recipientEmail, carModel);
+    await mailerService.sendRentalRequestEmail(recipientEmail, rentalDetails);
     res.status(200).json({ message: "Email sent successfully" });
   } catch (error) {
     console.error(error);

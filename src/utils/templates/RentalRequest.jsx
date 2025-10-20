@@ -11,41 +11,55 @@ import {
   Row,
   Section,
   Text,
+  Hr
 } from '@react-email/components';
 
-const baseUrl = process.env.VERCEL_URL
-  ? `https://${process.env.VERCEL_URL}`
-  : '';
-
-export const YelpRecentLoginEmail = ({
-  userFirstName,
-  loginDate,
-  loginDevice,
-  loginLocation,
-  loginIp,
+const DominicarRentalRequestEmail = ({
+  modelCar,
+  pickupDate,
+  pickupTime,
+  pickupAirport,
+  returnDate,
+  returnTime,
+  returnAirport,
+  name,
+  documento,
 }) => {
-  const formattedDate = new Intl.DateTimeFormat('en', {
-    dateStyle: 'long',
-    timeStyle: 'short',
-  }).format(loginDate);
+  const formatDate = (dateString) => {
+    try {
+      const date = new Date(dateString);
+      if (isNaN(date.getTime())) {
+        return 'Unknown Date';
+      }
+      return new Intl.DateTimeFormat('en', {
+        dateStyle: 'long',
+      }).format(date);
+
+    } catch (error) {
+      throw new Error('Invalid date format');
+    }
+  };
+
+  const formattedPickupDate = formatDate(pickupDate);
+  const formattedReturnDate = formatDate(returnDate);
 
   return (
     <Html>
       <Head />
       <Body style={main}>
-        <Preview>Yelp recent login</Preview>
+        <Preview>Dominicar Rental Request</Preview>
         <Container>
-          <Section style={logo}>
-            <Img src={`${baseUrl}/static/yelp-logo.png`} alt="Yelp logo" />
+          <Section style={header}>
+            <Heading style={headerText}>Dominicar</Heading>
           </Section>
 
           <Section style={content}>
             <Row>
               <Img
                 style={image}
-                width={620}
-                src={`${baseUrl}/static/yelp-header.png`}
-                alt="Yelp header illustration"
+                width={45}
+                src={'https://www.pinclipart.com/picdir/big/563-5639396_car-rental-logo-png-clipart.png'}
+                alt="Dominicar header illustration"
               />
             </Row>
 
@@ -58,7 +72,7 @@ export const YelpRecentLoginEmail = ({
                     textAlign: 'center',
                   }}
                 >
-                  Hi {userFirstName},
+                  Hi {name},
                 </Heading>
                 <Heading
                   as="h2"
@@ -68,44 +82,62 @@ export const YelpRecentLoginEmail = ({
                     textAlign: 'center',
                   }}
                 >
-                  We noticed a recent login to your Yelp account.
+                  Thank you for your rental request with Dominicar!
                 </Heading>
 
+                <Text style={sectionHeader}>Information del cliente:</Text>
                 <Text style={paragraph}>
-                  <b>Time: </b>
-                  {formattedDate}
+                  <b>Name: </b>
+                  {name}
                 </Text>
                 <Text style={{ ...paragraph, marginTop: -5 }}>
-                  <b>Device: </b>
-                  {loginDevice}
+                  <b>Document ID: </b>
+                  {documento}
+                </Text>
+                <Hr className="my-[16px] border-gray-300" />
+                <Text style={sectionHeader}>Detalles del alquiler:</Text>
+                <Text style={paragraph}>
+                  <b>Pickup Date: </b>
+                  {formattedPickupDate}
                 </Text>
                 <Text style={{ ...paragraph, marginTop: -5 }}>
-                  <b>Location: </b>
-                  {loginLocation}
+                  <b>Pickup Time: </b>
+                  {pickupTime}
                 </Text>
-                <Text
-                  style={{
-                    color: 'rgb(0,0,0, 0.5)',
-                    fontSize: 14,
-                    marginTop: -5,
-                  }}
-                >
-                  *Approximate geographic location based on IP address:
-                  {loginIp}
+                <Text style={{ ...paragraph, marginTop: -5 }}>
+                  <b>Pickup Location: </b>
+                  {pickupAirport}
+                </Text>
+                <Text style={{ ...paragraph, marginTop: -5 }}>
+                  <b>Return Date: </b>
+                  {formattedReturnDate}
+                </Text>
+                <Text style={{ ...paragraph, marginTop: -5 }}>
+                  <b>Return Time: </b>
+                  {returnTime}
+                </Text>
+                <Text style={{ ...paragraph, marginTop: -5 }}>
+                  <b>Return Location: </b>
+                  {returnAirport}
+                </Text>
+                <Hr className="my-[16px] border-gray-300" />
+                <Text style={sectionHeader}>Detalles del coche:</Text>
+                <Text style={paragraph}>
+                  <b>Model: </b>
+                  {modelCar}
                 </Text>
 
                 <Text style={paragraph}>
-                  If this was you, there's nothing else you need to do.
+                  Your rental request is being processed. We will contact you soon to confirm your booking.
                 </Text>
                 <Text style={{ ...paragraph, marginTop: -5 }}>
-                  If this wasn't you or if you have additional questions, please
-                  see our support page.
+                  If you have any questions, please visit our support page or contact our team.
                 </Text>
               </Column>
             </Row>
             <Row style={{ ...boxInfos, paddingTop: '0' }}>
               <Column style={buttonContainer} colSpan={2}>
-                <Button style={button}>Learn More</Button>
+                <Button style={button}>Contact Support</Button>
               </Column>
             </Row>
           </Section>
@@ -113,9 +145,9 @@ export const YelpRecentLoginEmail = ({
           <Section style={containerImageFooter}>
             <Img
               style={image}
-              width={620}
-              src={`${baseUrl}/static/yelp-footer.png`}
-              alt="Yelp footer decoration"
+              width={45}
+              src={'https://www.pinclipart.com/picdir/big/563-5639396_car-rental-logo-png-clipart.png'}
+              alt="Dominicar footer decoration"
             />
           </Section>
 
@@ -126,8 +158,7 @@ export const YelpRecentLoginEmail = ({
               color: 'rgb(0,0,0, 0.7)',
             }}
           >
-            © 2022 | Yelp Inc., 350 Mission Street, San Francisco, CA 94105,
-            U.S.A. | www.yelp.com
+            © 2025 | Dominicar, Puerto Plata, Dominican Republic | www.dominicar.com
           </Text>
         </Container>
       </Body>
@@ -135,15 +166,7 @@ export const YelpRecentLoginEmail = ({
   );
 };
 
-YelpRecentLoginEmail.PreviewProps = {
-  userFirstName: 'Alan',
-  loginDate: new Date('September 7, 2022, 10:58 am'),
-  loginDevice: 'Chrome on Mac OS X',
-  loginLocation: 'Upland, California, United States',
-  loginIp: '47.149.53.167',
-};
-
-export default YelpRecentLoginEmail;
+export default DominicarRentalRequestEmail;
 
 const main = {
   backgroundColor: '#fff',
@@ -155,8 +178,24 @@ const paragraph = {
   fontSize: 16,
 };
 
-const logo = {
+const header = {
   padding: '30px 20px',
+  backgroundColor: '#2ecc71',
+  textAlign: 'center',
+};
+
+const headerText = {
+  fontSize: 36,
+  fontWeight: 'bold',
+  color: '#fff',
+  margin: 0,
+};
+
+const sectionHeader = {
+  fontSize: 18,
+  fontWeight: 'bold',
+  marginTop: 20,
+  marginBottom: 10,
 };
 
 const buttonContainer = {
@@ -164,9 +203,9 @@ const buttonContainer = {
 };
 
 const button = {
-  backgroundColor: '#e00707',
+  backgroundColor: '#2ecc71',
   borderRadius: 3,
-  color: '#FFF',
+  color: '#fff',
   fontWeight: 'bold',
   border: '1px solid rgb(0,0,0, 0.1)',
   cursor: 'pointer',
