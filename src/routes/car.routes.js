@@ -4,4 +4,7 @@ const router = express.Router();
 
 router.get("/all-cars", carController.getAllCars);
 
+router.post("/create", carController.createCar);
+
+
 module.exports = router;

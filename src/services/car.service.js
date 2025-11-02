@@ -13,5 +13,14 @@ carService.getAllCarsFromDB = async () => {
   return data;
 };
 
+carService.createCarInDB = async (car) => {
+  const { data, error } = await supabase
+    .from('cars')
+    .insert(car);
+
+  if (error) throw error;
+  return data;
+};
+
 
 module.exports = carService;
