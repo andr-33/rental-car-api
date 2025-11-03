@@ -18,8 +18,8 @@ carController.getAllCars = async (req, res) => {
 
 carController.createCar = async (req, res) => {
   try {
-    const car = req.body;
-    const createdCar = await carService.createCarInDB(car);
+    const { image, ...carData } = req.body;
+    const createdCar = await carService.createCarInDB(carData);
     res.status(201).json(createdCar);
   }
   catch (error) {
