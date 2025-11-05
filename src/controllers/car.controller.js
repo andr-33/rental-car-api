@@ -49,4 +49,21 @@ carController.updateCar = async (req, res) => {
   }
 };
 
+carController.updateCarStatus = async (req, res) => {
+  try{
+    const { id } = req.params;
+    const { newStatus } = req.body;
+    await carService.updateCarStatusInDB(id, newStatus);
+    res.status(200).json({ message: "Car status updated successfully" });
+  } catch (error) {
+    console.error(error);
+    res.status(error.status || 500).json({
+      error:{
+        message: error.message || "Internal Server Error",
+        code: "updateCarStatusError"
+      }
+    });
+  }
+};
+
 module.exports = carController;
