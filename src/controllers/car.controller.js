@@ -18,16 +18,32 @@ carController.getAllCars = async (req, res) => {
 
 carController.createCar = async (req, res) => {
   try {
-    const { image, ...carData } = req.body;
+    const { images, ...carData } = req.body;
     const createdCar = await carService.createCarInDB(carData);
     res.status(201).json(createdCar);
-  }
-  catch (error) {
+  } catch (error) {
     console.error(error);
     res.status(error.status || 500).json({
       error: {
         message: error.message || "Internal Server Error",
         code: "createCarError"
+      }
+    });
+  }
+};
+
+carController.updateCar = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { images, ...carData } = req.body;
+    const updatedCar =  await carService.updateCarInDB(id, carData);
+    res.status(200).json(updatedCar);
+  } catch (error) {
+    console.error(error);
+    res.status(error.status || 500).json({
+      error: {
+        message: error.message || "Internal Server Error",
+        code: "updateCarError"
       }
     });
   }
