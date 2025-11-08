@@ -1,6 +1,21 @@
 const supabase = require("../config/supabase.config");
 const userService = {};
 
+userService.getUserFromDB = async (id) => {
+  const { data, error } = await supabase
+    .from("users")
+    .select(`
+      full_name,
+      passport,
+      phone  
+    `)
+    .eq("id", id)
+    .single();
+    
+  if (error) throw error;
+  return data;
+};
+
 userService.createUserInDB = async (user) => {
   const { data: authUser, error: authError  } = await supabase.auth.signUp({
     email: user.email,
