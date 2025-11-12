@@ -4,16 +4,23 @@ const userService = {};
 userService.getUserFromDB = async (id) => {
   const { data, error } = await supabase
     .from("users")
-    .select(`
-      full_name,
-      passport,
-      phone  
-    `)
+    .select("full_name, passport, phone")
     .eq("id", id)
     .single();
     
   if (error) throw error;
   return data;
+};
+
+userService.getUserEmailFromDB = async (id) => {
+  const { data, error } = await supabase
+    .from("user_email")
+    .select("email")
+    .eq("id", id)
+    .single();
+
+  if (error) throw error;
+  return data.email;
 };
 
 userService.createUserInDB = async (user) => {

@@ -1,21 +1,37 @@
 const mailerService = require("../services/mailer.service");
-const mailerController = {};
+const rentalService = require("../services/rental.service");
+const userService = require("../services/user.service");
+const rentalController = {};
 
-mailerController.rentalRequest = async (req, res) => {
-  const { recipientEmail, rentalDetails } = req.body;
+rentalController.createRentalRequest = async (req, res) => {
+  const user_id = req.userId;
 
-  try {
-    await mailerService.sendRentalRequestEmail(recipientEmail, rentalDetails);
-    res.status(200).json({ message: "Email sent successfully" });
+  const allowedFields = [
+    "car_id", "pickup_date", "return_date", "rental_days",
+    "total_amount", "address", "country", "city", "zip_code"
+  ];
+
+  const rental = {
+    user_id,
+    ...Object.fromEntries(Object.entries(req.body).filter(([key]) => allowedFields.includes(key)))
+  };
+
+  try{
+    const createdRental = await rentalService.createRentalInDB(rental);
+
+    const userEmail = await userService.getUserEmailFromDB(user_id);
+    await mailerService.sendRentalRequestConfirmationEmail(userEmail, rental);
+
+    res.status(201).json(createdRental);
   } catch (error) {
     console.error(error);
     res.status(error.status || 500).json({
       error: {
         message: error.message || "Internal Server Error",
-        code: "sendEmailError",
-      },
+        code: "createRentalError"
+      }
     });
   }
 };
 
-module.exports = mailerController;
+module.exports = rentalController;

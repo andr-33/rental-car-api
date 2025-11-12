@@ -1,13 +1,13 @@
 const mailer = require("../config/mailer.config");
 const { render } = require("@react-email/components");
-import RentalRequest from "../utils/templates/RentalRequest";
+import RentalRequestConfirmation from "../utils/templates/RentalRequestConfirmation";
 const mailerService = {};
 
-mailerService.sendRentalRequestEmail = async (recipientEmail, rentalDetails) => {
+mailerService.sendRentalRequestConfirmationEmail = async (recipientEmail, rentalDetails) => {
   try {
     const { modelCar, pickupDate, pickupTime, pickupAirport, returnDate, returnTime, returnAirport, name, documento } = rentalDetails;
     const html = await render(
-      <RentalRequest 
+      <RentalRequestConfirmation 
         recipientEmail={recipientEmail}
         carModel={modelCar}
         pickupDate={pickupDate}
@@ -20,8 +20,6 @@ mailerService.sendRentalRequestEmail = async (recipientEmail, rentalDetails) => 
         documento={documento} 
       />
     );
-
-    console.log(name);
 
     const mailOptions = {
       from: process.env.MAILER_USER,
