@@ -1,34 +1,63 @@
 const mailer = require("../config/mailer.config");
 const { render } = require("@react-email/components");
 import RentalRequestConfirmation from "../utils/templates/RentalRequestConfirmation";
+import RentalRequestNotification from "../utils/templates/RentalRequestNotification";
+
 const mailerService = {};
 
-mailerService.sendRentalRequestConfirmationEmail = async (recipientEmail, rentalDetails) => {
+mailerService.sendRentalRequestConfirmationEmail = async (recipientEmail, emailDetails) => {
   try {
-    const { modelCar, pickupDate, pickupTime, pickupAirport, returnDate, returnTime, returnAirport, name, documento } = rentalDetails;
     const html = await render(
       <RentalRequestConfirmation 
-        recipientEmail={recipientEmail}
-        carModel={modelCar}
-        pickupDate={pickupDate}
-        pickupTime={pickupTime}
-        pickupAirport={pickupAirport}
-        returnDate={returnDate}
-        returnTime={returnTime}
-        returnAirport={returnAirport}
-        name={name}
-        documento={documento} 
+        name={emailDetails.full_name}
+        modelCar={emailDetails.model}
+        pickupDate={emailDetails.pickup_date}
+        returnDate={emailDetails.return_date}
+        airportCode={emailDetails.airport_code}
+        airportCity={emailDetails.airport_city}
+        totalDays={emailDetails.rental_days}
+        totalAmount={emailDetails.total_amount}
       />
     );
 
     const mailOptions = {
       from: process.env.MAILER_USER,
       to: recipientEmail,
-      subject: `Solicitu de renta - ${modelCar}`,
+      subject: `Solicitud recibida - ${emailDetails.model}`,
       html: html,
     };
     await mailer.sendMail(mailOptions);
   } catch (error) {
+    console.error(error);
+    throw new Error("Error sending email");
+  }
+};
+
+mailerService.sendRentalRequestNotificacionEmail = async (adminEmail, emailDetails) => {
+  try{
+    const html = await render(
+      <RentalRequestNotification 
+        name={emailDetails.full_name}
+        phone={emailDetails.phone}
+        modelCar={emailDetails.model}
+        pickupDate={emailDetails.pickup_date}
+        returnDate={emailDetails.return_date}
+        airportCode={emailDetails.airport_code}
+        airportCity={emailDetails.airport_city}
+        totalDays={emailDetails.rental_days}  
+        totalAmount={emailDetails.total_amount}
+        bookingId= "12345"
+      />
+    );
+
+    const mailOptions = {
+      from: process.env.MAILER_USER,
+      to: adminEmail,
+      subject: "Nueva solicitud recibida",
+      html: html,
+    };
+    await mailer.sendMail(mailOptions);
+  } catch (error){
     console.error(error);
     throw new Error("Error sending email");
   }

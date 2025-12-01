@@ -6,21 +6,31 @@ const rentalController = {};
 rentalController.createRentalRequest = async (req, res) => {
   const user_id = req.userId;
 
-  const allowedFields = [
+  const schemaFields = [
     "car_id", "pickup_date", "return_date", "rental_days",
     "total_amount", "address", "country", "city", "zip_code"
   ];
 
-  const rental = {
+  const emailFields = [
+    "full_name", "passport", "phone", "model", "pickup_date", "return_date",
+    "rental_days", "total_amount", "airport_code", "airport_city"
+  ];
+
+  const rentalObj = {
     user_id,
-    ...Object.fromEntries(Object.entries(req.body).filter(([key]) => allowedFields.includes(key)))
+    ...Object.fromEntries(Object.entries(req.body).filter(([key]) => schemaFields.includes(key)))
   };
 
-  try{
-    const createdRental = await rentalService.createRentalInDB(rental);
+  const emailDetails = {
+    ...Object.fromEntries(Object.entries(req.body).filter(([key]) => emailFields.includes(key)))
+  }
 
+  try{
+    const createdRental = await rentalService.createRentalInDB(rentalObj);
     const userEmail = await userService.getUserEmailFromDB(user_id);
-    await mailerService.sendRentalRequestConfirmationEmail(userEmail, rental);
+
+    await mailerService.sendRentalRequestNotificacionEmail(userEmail, emailDetails)
+    await mailerService.sendRentalRequestConfirmationEmail(userEmail, emailDetails);
 
     res.status(201).json(createdRental);
   } catch (error) {

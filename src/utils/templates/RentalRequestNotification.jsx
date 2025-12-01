@@ -1,5 +1,6 @@
 import {
   Body,
+  Button,
   Column,
   Container,
   Head,
@@ -14,67 +15,85 @@ import {
 } from '@react-email/components';
 import dayjs from 'dayjs';
 
-const RentalRequestConfirmation = ({
+const AdminNewRentalRequest = ({
   name,
+  phone,
   modelCar,
   pickupDate,
   returnDate,
   airportCode,
   airportCity,
   totalDays,
-  totalAmount
+  totalAmount,
+  bookingId
 }) => {
   return (
     <Html>
       <Head />
-      <Preview>Confirmación de solicitud de alquiler</Preview>
+      <Preview>Nueva solicitud de alquiler recibida - {name}</Preview>
       <Body style={main}>
         <Container>
+          {/* Header con Logo */}
           <Section style={header}>
             <Img
               style={image}
               src={'https://hwnmyoffjbrscrcmkvtf.supabase.co/storage/v1/object/public/assets/logo/main_logo.png'}
-              alt="JR Drive header illustration"
+              alt="JR Drive Logo"
             />
           </Section>
 
+          {/* Contenido Principal */}
           <Section style={content}>
             <Column style={{ ...boxInfos, paddingBottom: '0' }}>
               <Heading
-                as="h3"
                 style={{
-                  fontSize: 26,
+                  fontSize: 28,
+                  fontWeight: 'bold',
                   textAlign: 'center',
-                  marginTop: 0
+                  color: '#333',
+                  margin: '0 0 15px 0',
                 }}
               >
-                Hola <strong>{name}</strong>, <br/>
-                Gracias por confiar en JR Drive!
+                Nueva Solicitud
               </Heading>
-              <Text style={{ ...paragraph, textAlign: 'justify' }}>
-                Tu solicitud de alquiler está siendo procesada. Nos pondremos en contacto contigo lo más pronto posible para confirmar tu reserva.
+
+              <Text style={{ ...paragraph, textAlign: 'center', marginTop: 0 }}>
+                El cliente <b>{name}</b> ha realizado una nueva solicitud de alquiler.
               </Text>
-              <Text style={{ ...paragraph, textAlign: 'justify', marginTop: 0 }}>
-                Si tienes alguna pregunta, por favor visita nuestra página de soporte o contacta con nuestro equipo.
-              </Text>
+
+              {/* Botón de Acción */}
+              <Section style={{ textAlign: 'center', margin: '20px 0' }}>
+                <Button
+                  style={button}
+                  href={`https://www.jr-drive.com/admin/${bookingId}`}
+                >
+                  Gestionar Solicitud
+                </Button>
+              </Section>
 
               <Hr style={{ borderColor: '#e5e7eb', margin: '20px 0' }} />
 
-              <Text style={sectionHeader}>Detalles de tu alquiler:</Text>
+              {/* Resumen en caja gris */}
+              <Text style={sectionHeader}>Resumen de la solicitud:</Text>
               <Section style={{ backgroundColor: '#f9f9f9', padding: '15px', borderRadius: '5px' }}>
                 <Text style={{ margin: '5px 0', fontSize: '14px', color: '#333' }}>
                   <b>Coche: </b>{modelCar}
                 </Text>
                 <Text style={{ margin: '5px 0', fontSize: '14px', color: '#333' }}>
-                  <b>Total de días: </b>{totalDays}
+                  <b>Ingreso: </b>${totalAmount} ({totalDays} días)
                 </Text>
                 <Text style={{ margin: '5px 0', fontSize: '14px', color: '#333' }}>
-                  <b>Total a pagar: </b>${totalAmount}
+                  <b>Cliente: </b>{name}
+                </Text>
+                <Text style={{ margin: '5px 0', fontSize: '14px', color: '#333' }}>
+                  <b>Contacto: </b>{phone}
                 </Text>
               </Section>
-              <Section style={{marginBottom: '15px'}}>
-                <Text style={{ ...paragraph, margin: '15px 0 5px 0' }}>
-                  <b>Aeropuerto: </b>
+
+              {/* Logística */}
+              <Section style={{ marginTop: '20px' }}>
+                <Text style={{ ...paragraph, margin: '5px 0 15px 0' }}>
+                  <b>Ubicación: </b>
                   {`${airportCode} - ${airportCity}`}
                 </Text>
                 <Row>
@@ -106,17 +125,25 @@ const RentalRequestConfirmation = ({
                   </Column>
                 </Row>
               </Section>
+
+              <Hr style={{ borderColor: '#e5e7eb', margin: '20px 0' }} />
+
+              <Text style={{ ...paragraph, fontSize: 14, color: '#666', textAlign: 'center' }}>
+                Verifica el inventario antes de contactar al cliente.
+              </Text>
             </Column>
           </Section>
 
+          {/* Footer */}
           <Text
             style={{
               textAlign: 'center',
               fontSize: 12,
               color: 'rgb(0,0,0, 0.7)',
+              marginTop: '20px'
             }}
           >
-            © 2025 | JR Drive by Jonathan Rodz, República Dominicana | www.jr-drive.com
+            © 2025 | JR Drive Internal System
           </Text>
         </Container>
       </Body>
@@ -124,8 +151,9 @@ const RentalRequestConfirmation = ({
   );
 };
 
-export default RentalRequestConfirmation;
+export default AdminNewRentalRequest;
 
+// Estilos
 const main = {
   backgroundColor: '#f4f4f4',
   fontFamily:
@@ -135,6 +163,8 @@ const main = {
 
 const paragraph = {
   fontSize: 16,
+  lineHeight: '24px',
+  color: '#333',
 };
 
 const header = {
@@ -153,14 +183,16 @@ const sectionHeader = {
 };
 
 const button = {
-  borderRadius: 3,
+  backgroundColor: '#01260E',
+  borderRadius: '5px',
   color: '#fff',
   fontWeight: 'bold',
-  border: '1px solid rgb(0,0,0, 0.1)',
-  cursor: 'pointer',
-  display: 'inline-block',
-  padding: '12px 30px',
   textDecoration: 'none',
+  textAlign: 'center',
+  display: 'inline-block',
+  width: '200px',
+  padding: '12px 0',
+  fontSize: '16px',
 };
 
 const content = {
