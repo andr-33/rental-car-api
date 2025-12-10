@@ -3,6 +3,21 @@ const rentalService = require("../services/rental.service");
 const userService = require("../services/user.service");
 const rentalController = {};
 
+rentalController.getAllRentals = async (req, res) => {
+  try {
+    const rentals = await rentalService.getAllRentalsFromDB();
+    res.status(200).json(rentals);
+  } catch (error) {
+    console.error(error);
+    res.status(error.status || 500).json({
+      error: {
+        message: error.message || "Internal Server Error",
+        code: "getAllRentalsError"
+      }
+    });
+  }
+};
+
 rentalController.createRentalRequest = async (req, res) => {
   const user_id = req.userId;
 
@@ -25,7 +40,7 @@ rentalController.createRentalRequest = async (req, res) => {
     ...Object.fromEntries(Object.entries(req.body).filter(([key]) => emailFields.includes(key)))
   }
 
-  try{
+  try {
     const createdRental = await rentalService.createRentalInDB(rentalObj);
     const userEmail = await userService.getUserEmailFromDB(user_id);
 
