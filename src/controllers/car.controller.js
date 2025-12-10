@@ -36,7 +36,7 @@ carController.updateCar = async (req, res) => {
   try {
     const { id } = req.params;
     const { images, ...carData } = req.body;
-    const updatedCar =  await carService.updateCarInDB(id, carData);
+    const updatedCar = await carService.updateCarInDB(id, carData);
     res.status(200).json(updatedCar);
   } catch (error) {
     console.error(error);
@@ -50,17 +50,22 @@ carController.updateCar = async (req, res) => {
 };
 
 carController.updateCarStatus = async (req, res) => {
-  try{
-    const { id } = req.params;
-    const { newStatus } = req.body;
+  const { id } = req.params;
+  const { newStatus } = req.body;
+
+  try {
+    if (newStatus === undefined) {
+      throw new Error("Missing new status");
+    }
+
     await carService.updateCarStatusInDB(id, newStatus);
     res.status(200).json({ message: "Car status updated successfully" });
   } catch (error) {
     console.error(error);
     res.status(error.status || 500).json({
-      error:{
+      error: {
         message: error.message || "Internal Server Error",
-        code: "updateCarStatusError"
+        code: "updateStatusError"
       }
     });
   }

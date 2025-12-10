@@ -30,4 +30,17 @@ rentalService.createRentalInDB = async (rental) => {
   return data;
 };
 
+rentalService.updateRentalStatusInDB = async (id, status) => {
+  console.log(id, status);
+  const { data, error } = await supabase
+    .from('rentals')
+    .update({ 'status': status })
+    .eq('id', id)
+    .select()
+    .single();
+
+  if (error) throw error;
+  return data;
+};
+
 module.exports = rentalService;
