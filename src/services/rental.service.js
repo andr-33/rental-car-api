@@ -31,7 +31,6 @@ rentalService.createRentalInDB = async (rental) => {
 };
 
 rentalService.updateRentalStatusInDB = async (id, status) => {
-  console.log(id, status);
   const { data, error } = await supabase
     .from('rentals')
     .update({ 'status': status })
